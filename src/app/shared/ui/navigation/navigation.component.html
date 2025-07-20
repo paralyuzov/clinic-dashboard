@@ -1,0 +1,15 @@
+<p-menubar>
+  <ng-template #start>
+    <img class="w-12 h-12 saturate-200 dark:bg-gray-100/80 shadow-md dark:shadow-white rounded-full" src="clinic-logo.png" alt="">
+  </ng-template>
+  <ng-template #end>
+    <div class="flex  items-center space-x-2">
+        <input type="text" pInputText placeholder="Search" class="w-56 h-10 px-10" />
+      <p-button label="Create Patient" size="small" outlined="true" icon="pi pi-plus"></p-button>
+      <p-button label="Create Doctor" size="small" outlined="true" icon="pi pi-plus"></p-button>
+      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="normal"/>
+     <p-menu #menu [model]="options" [popup]="true" />
+      <p-button size="small" rounded="true" outlined="true" (click)="menu.toggle($event)" icon="pi pi-arrow-down"/>
+    </div>
+  </ng-template>
+</p-menubar>
