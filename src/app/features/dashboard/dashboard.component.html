@@ -1,0 +1,46 @@
+<div class="max-w-[1600px] mx-auto">
+  <div class="grid grid-cols-3 gap-4 p-4 bg-green-50/70 dark:bg-[#121212]">
+    <div
+      class="flex flex-col items-center gap-2 shadow-inner dark:shadow-inner shadow-slate-400 rounded-lg"
+    >
+      <div>
+        <img class="aspect-auto w-60" src="doctor1.png" alt="" />
+      </div>
+      <p class="text-center font-mono p-2">54 DOC's</p>
+    </div>
+
+    <div
+      class="flex flex-col items-center shadow-inner dark:shadow-inner shadow-slate-400 gap-2 rounded-lg"
+    >
+      <div>
+        <img class="aspect-auto w-60" src="patient1.png" alt="" />
+      </div>
+      <p class="text-center font-mono p-2">134 Patients</p>
+    </div>
+    <div
+      class="flex flex-col items-center shadow-inner dark:shadow-inner shadow-slate-400 gap-2 rounded-lg"
+    >
+      <div>
+        <img class="aspect-auto w-60" src="appointments1.png" alt="" />
+      </div>
+      <p class="text-center font-mono p-2">Today Appointments 28</p>
+    </div>
+    <div class="col-span-2 shadow-inner dark:shadow-inner shadow-slate-400 p-1">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">Appointments Overview</p>
+      <app-appointment-table />
+    </div>
+    <div
+      class="shadow-inner text-black dark:shadow-inner shadow-slate-400 dark:text-white"
+    >
+      <app-patient-chart />
+    </div>
+    <div class="col-span-2 shadow-inner dark:shadow-inner shadow-slate-400 p-1">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">Patients Overview</p>
+      <app-patient-table />
+    </div>
+    <div class="shadow-inner dark:shadow-inner shadow-slate-400 p-1">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">Doctors Overview</p>
+      <app-doc-table />
+    </div>
+  </div>
+</div>
