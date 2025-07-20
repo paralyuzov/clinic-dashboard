@@ -1,0 +1,74 @@
+<div class="text-sm tracking-tighter">
+  <p-table
+    #dt
+    [value]="appointments"
+    size="small"
+    [scrollable]="true"
+    scrollHeight="400px"
+    [sortOrder]="-1"
+    sortField="date"
+    [rowHover]="true"
+    [globalFilterFields]="['department', 'doctor.name', 'patient.name']"
+  >
+    <ng-template #caption>
+      <div class="text-start">
+        <input
+          type="text"
+          pInputText
+          size="30"
+          placeholder="Search"
+          pSize="small"
+          (input)="applyFilterGlobal($event, 'contains')"
+        />
+      </div>
+    </ng-template>
+    <ng-template #header>
+      <tr>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Department</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-appointment>
+      <tr>
+        <td>
+          <div>
+            <div>{{ appointment.patient.name }}</div>
+          </div>
+        </td>
+        <td>
+          <div>
+            <div>{{ appointment.doctor.name }}</div>
+          </div>
+        </td>
+        <td>{{ appointment.date }}</td>
+        <td>{{ appointment.time }}</td>
+        <td>{{ appointment.department }}</td>
+        <td>{{ appointment.reason }}</td>
+        <td>
+          @if(appointment.status === 'Scheduled') {
+          <p-message variant="simple" severity="info">scheduled</p-message>
+          } @else if(appointment.status === "Completed") {
+          <p-message variant="simple" severity="success">completed</p-message>
+          } @else if(appointment.status === "Cancelled") {
+          <p-message variant="simple" severity="error">cancelled</p-message>
+          } @else if(appointment.status === "Pending") {
+          <p-message variant="simple" severity="warn">pending</p-message>
+          }
+        </td>
+        <td>
+          <p-button
+            [outlined]="true"
+            rounded="true"
+            icon="pi pi-file-edit"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
