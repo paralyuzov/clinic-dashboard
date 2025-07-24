@@ -8,6 +8,7 @@
       <p-button label="Create Patient" size="small" outlined="true" icon="pi pi-plus"></p-button>
       <p-button label="Create Doctor" size="small" outlined="true" icon="pi pi-plus"></p-button>
       <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="normal"/>
+      <p>{{(user$ | async)?.name}}</p>
      <p-menu #menu [model]="options" [popup]="true" />
       <p-button size="small" rounded="true" outlined="true" (click)="menu.toggle($event)" icon="pi pi-arrow-down"/>
     </div>

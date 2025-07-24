@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-
+import { UserService } from '../../../core/services/user.service';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-navigation',
   imports: [
@@ -18,6 +19,7 @@ import { Menu } from 'primeng/menu';
     MenubarModule,
     ButtonModule,
     Menu,
+    AsyncPipe
   ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css',
@@ -25,6 +27,10 @@ import { Menu } from 'primeng/menu';
 export class NavigationComponent implements OnInit {
   items: MenuItem[] | undefined;
   options: MenuItem[] | undefined;
+
+  userService = inject(UserService);
+
+  user$ = this.userService.user$
 
   ngOnInit() {
     this.items = [
@@ -64,19 +70,19 @@ export class NavigationComponent implements OnInit {
         label: 'Profile',
         icon: 'pi pi-user',
         command: () => {
-          console.log('Profile clicked');
+          ('Profile clicked');
         }
       },
       {        label: 'Settings',
         icon: 'pi pi-cog',
         command: () => {
-          console.log('Settings clicked');
+          ('Settings clicked');
         }
       },
       {        label: 'Logout',
         icon: 'pi pi-sign-out',
         command: () => {
-          console.log('Logout clicked');
+          ('Logout clicked');
         }
       },
     ];
