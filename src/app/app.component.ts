@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { NavigationComponent } from "./shared/ui/navigation/navigation.component";
+import { RouterOutlet } from '@angular/router'
+import { LoaderComponent } from "./shared/ui/loader/loader.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavigationComponent],
+  imports: [RouterOutlet, LoaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'clinic-admin';
+
 }
