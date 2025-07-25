@@ -1,3 +1,5 @@
+
+@if(doctors$ | async; as doctors) {
 <div class="text-sm tracking-tighter">
   <p-table
     #dt
@@ -8,15 +10,15 @@
     [sortOrder]="-1"
     sortField="date"
     [rowHover]="true"
-    [globalFilterFields]="['name', 'specialty', 'phone', 'email']"
+    [globalFilterFields]="['name', 'phone', 'email']"
   >
     <ng-template #caption>
       <div class="text-start">
-         <input
+        <input
           type="text"
           pInputText
           size="30"
-          placeholder="Search"
+          placeholder="Search by name,phone and email"
           pSize="small"
           (input)="applyFilterGlobal($event, 'contains')"
         />
@@ -25,18 +27,29 @@
     <ng-template #header>
       <tr>
         <th>Name</th>
-        <th>Specialty</th>
+        <th>Spec</th>
         <th>Phone</th>
         <th>Email</th>
       </tr>
     </ng-template>
-    <ng-template #body let-doctor>
+    <ng-template pTemplate="body" #body let-doctor>
       <tr>
-        <td>{{ doctor.name }}</td>
-        <td>{{ doctor.specialty }}</td>
+        <td
+          class="hover:cursor-pointer hover:dark:text-[#5effac] hover:text-sky-500"
+          (click)="openDoctorDetails(doctor._id)"
+        >
+          {{ doctor.name }}
+        </td>
+        <td>{{ doctor.specialization }}</td>
         <td>{{ doctor.phone }}</td>
-        <td>{{ doctor.email }}</td>
+        <td>
+          <a href="mailto:{{ doctor.email }}">{{ doctor.email }}</a>
+        </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+}
+
+
+
