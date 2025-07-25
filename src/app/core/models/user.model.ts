@@ -12,7 +12,12 @@ export interface RegisterDto {
   confirmPassword: string;
 }
 
-export interface RegisterResponse {
+export interface LoginDto {
+  email: string;
+  password: string;
+}
+
+export interface UserResponse {
   message: string;
   user: User;
   accessToken: string;
