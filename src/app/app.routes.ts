@@ -4,13 +4,25 @@ import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   {
-    path:'',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate:[authGuard]
+    path: '',
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
+    canActivate: [authGuard],
   },
   {
-    path:'register',
-    loadComponent: () => import('./features/register/register.component').then(m => m.RegisterComponent),
-    canActivate:[guestGuard]
-  }
+    path: 'register',
+    loadComponent: () =>
+      import('./features/register/register.component').then(
+        (m) => m.RegisterComponent
+      ),
+    canActivate: [guestGuard],
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/login/login.component').then((m) => m.LoginComponent),
+    canActivate: [guestGuard],
+  },
 ];
