@@ -1,0 +1,47 @@
+@if(loading$ | async) {
+  <app-spinner/>
+}
+
+@if(currentDoctor$ | async; as doctor) {
+<div class="flex justify-center items-center">
+  <div class="p-8 flex flex-col items-center gap-6">
+    <div class="absolute top-4 right-4">
+      <p-button
+        icon="pi pi-times"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="danger"
+        (onClick)="onClose()"
+      />
+    </div>
+    <img
+      src="doctor_details.webp"
+      alt="Doctor Avatar"
+      class="w-32 h-32 rounded-full shadow-md object-cover mb-4"
+    />
+    <h2 class="text-2xl font-bold mb-2">{{ doctor.name }}</h2>
+    <span class="text-blue-500 font-semibold font-mono text-lg mb-2">{{
+      doctor.specialization
+    }}</span>
+    <div class="flex flex-col gap-2 w-full">
+      <div class="flex justify-between">
+        <span>Age:</span>
+        <span>{{ doctor.age }}</span>
+      </div>
+      <div class="flex justify-between">
+        <span>Email:</span>
+        <span>{{ doctor.email }}</span>
+      </div>
+      <div class="flex justify-between">
+        <span>Phone:</span>
+        <span>{{ doctor.phone }}</span>
+      </div>
+    </div>
+    <div class="mt-4 w-full">
+      <h3 class="text-lg font-semibold mb-2">Biography</h3>
+      <p class="leading-relaxed">{{ doctor.bio }}</p>
+    </div>
+  </div>
+</div>
+}
