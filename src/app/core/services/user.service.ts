@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RegisterDto, User } from '../models/user.model';
+import { LoginDto, RegisterDto, User } from '../models/user.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 
@@ -39,6 +39,41 @@ export class UserService {
     });
   }
 
+  onLogin(loginDto:LoginDto) {
+    this.loading$$.next(true);
+    this.authService.login(loginDto).subscribe({
+      next: (response) => {
+        this.user$$.next(response.user);
+        localStorage.setItem('accessToken', response.accessToken);
+        this.error$$.next(null);
+        this.loading$$.next(false);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
+  }
+
+  onLogout() {
+    this.loading$$.next(true);
+    this.authService.logout().subscribe({
+      next: () => {
+        this.user$$.next(null);
+        localStorage.removeItem('accessToken');
+        this.error$$.next(null);
+        this.loading$$.next(false);
+        this.router.navigate(['login']);
+      },
+      error: (error) => {
+        console.error('Logout failed:', error);
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
+  }
+
   verifyUser() {
     this.loading$$.next(true);
     this.authService.verify().subscribe({
@@ -51,7 +86,6 @@ export class UserService {
         console.error('User verification failed:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
-        this.router.navigate(['register']);
       },
     });
   }
