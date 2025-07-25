@@ -6,7 +6,7 @@
     <div class="flex  items-center space-x-2">
         <input type="text" pInputText placeholder="Search" class="w-56 h-10 px-10" />
       <p-button label="Create Patient" size="small" outlined="true" icon="pi pi-plus"></p-button>
-      <p-button label="Create Doctor" size="small" outlined="true" icon="pi pi-plus"></p-button>
+      <p-button (onClick)="openDoctorForm()" label="Create Doctor" size="small" outlined="true" icon="pi pi-plus"></p-button>
       <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="normal"/>
       <p>{{(user$ | async)?.name}}</p>
      <p-menu #menu [model]="options" [popup]="true" />
@@ -14,3 +14,5 @@
     </div>
   </ng-template>
 </p-menubar>
+
+

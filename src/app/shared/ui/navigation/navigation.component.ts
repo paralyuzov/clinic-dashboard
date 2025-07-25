@@ -9,6 +9,8 @@ import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { UserService } from '../../../core/services/user.service';
 import { AsyncPipe } from '@angular/common';
+import { DialogService } from 'primeng/dynamicdialog';
+import { DoctorFormComponent } from '../../../features/doctor-form/doctor-form.component';
 @Component({
   selector: 'app-navigation',
   imports: [
@@ -19,18 +21,31 @@ import { AsyncPipe } from '@angular/common';
     MenubarModule,
     ButtonModule,
     Menu,
-    AsyncPipe
+    AsyncPipe,
   ],
+  providers: [DialogService],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css',
 })
 export class NavigationComponent implements OnInit {
   items: MenuItem[] | undefined;
   options: MenuItem[] | undefined;
-
   userService = inject(UserService);
+  user$ = this.userService.user$;
 
-  user$ = this.userService.user$
+  dialogService = inject(DialogService);
+
+  openDoctorForm() {
+    const ref = this.dialogService.open(DoctorFormComponent, {
+      header: 'Create Doctor',
+      modal: true,
+      breakpoints: { '1199px': '75vw', '575px': '90vw' },
+      style: { width: '50vw' },
+      draggable: false,
+      resizable: false
+    });
+
+  }
 
   ngOnInit() {
     this.items = [
@@ -71,19 +86,21 @@ export class NavigationComponent implements OnInit {
         icon: 'pi pi-user',
         command: () => {
           ('Profile clicked');
-        }
+        },
       },
-      {        label: 'Settings',
+      {
+        label: 'Settings',
         icon: 'pi pi-cog',
         command: () => {
           ('Settings clicked');
-        }
+        },
       },
-      {        label: 'Logout',
+      {
+        label: 'Logout',
         icon: 'pi pi-sign-out',
         command: () => {
-          ('Logout clicked');
-        }
+          this.userService.onLogout();
+        },
       },
     ];
   }
