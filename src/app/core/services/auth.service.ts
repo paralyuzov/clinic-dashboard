@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { RegisterDto, RegisterResponse, User } from '../models/user.model';
-
-
+import {
+  RegisterDto,
+  UserResponse,
+  User,
+  LoginDto,
+} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +14,31 @@ export class AuthService {
   private readonly baseUrl = 'http://localhost:3000/auth';
   private http = inject(HttpClient);
 
-
   register(registerDto: RegisterDto) {
-    return this.http.post<RegisterResponse>(`${this.baseUrl}/register`, registerDto, {
+    return this.http.post<UserResponse>(
+      `${this.baseUrl}/register`,
+      registerDto,
+      {
+        withCredentials: true,
+      }
+    );
+  }
+
+  login(loginDto: LoginDto) {
+    return this.http.post<UserResponse>(`${this.baseUrl}/login`, loginDto, {
       withCredentials: true,
     });
   }
 
+  logout() {
+    return this.http.post(
+      `${this.baseUrl}/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
   verify() {
     const token = localStorage.getItem('accessToken');
@@ -29,10 +50,8 @@ export class AuthService {
   }
 
   refreshToken() {
-    return this.http.get<RegisterResponse>(`${this.baseUrl}/refresh-token`, {
+    return this.http.get<UserResponse>(`${this.baseUrl}/refresh-token`, {
       withCredentials: true,
     });
   }
-
-
 }
