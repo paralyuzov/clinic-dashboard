@@ -1,0 +1,44 @@
+<div class="flex min-h-screen items-center justify-center">
+  <div class="flex flex-col md:flex-row  rounded-2xl shadow-inner shadow-slate-300 dark:shadow-white  overflow-hidden w-full max-w-4xl">
+    <div class="md:w-1/2 flex items-center justify-center  p-8">
+      <img src="emr.jpg" alt="Doctor" class="w-full max-w-lg rounded-lg" />
+    </div>
+    <div class="md:w-1/2 flex items-center justify-center p-8">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-full max-w-xs  gap-6">
+        <h2 class="text-3xl font-bold  mb-2 text-center">Login to Your Account</h2>
+        <p class="text-gray-500 mb-4 text-center">Sign in to manage your clinic appointments</p>
+        <div class="flex flex-col gap-2">
+          <div>
+            <p-floatlabel variant="on">
+              <input pInputText type="email" id="email" formControlName="email" class="w-full" />
+              <label for="email">Email</label>
+            </p-floatlabel>
+            @if (isInvalid('email')) { @if
+              (loginForm.get('email')?.errors?.['required']) {
+                <p-message severity="error" size="small" variant="simple">Email is required.</p-message>
+              } @if (loginForm.get('email')?.errors?.['email']) {
+                <p-message severity="error" size="small" variant="simple">Please enter a valid email.</p-message>
+              } }
+          </div>
+          <div>
+            <p-floatlabel variant="on">
+              <input pInputText type="password" id="password" formControlName="password" class="w-full" />
+              <label for="password">Password</label>
+            </p-floatlabel>
+            @if (isInvalid('password')) { @if
+              (loginForm.get('password')?.errors?.['required']) {
+                <p-message severity="error" size="small" variant="simple">Password is required.</p-message>
+              } @if (loginForm.get('password')?.errors?.['minlength']) {
+                <p-message severity="error" size="small" variant="simple">Password must be at least 6 characters long.</p-message>
+              } }
+          </div>
+        </div>
+        <div class="justify-center items-center flex mt-4">
+          <button [disabled]="loginForm.invalid || formSubmitted " pButton severity="primary" type="submit" class="w-full py-3 rounded-lg bg-blue-600 text-white font-semibold text-lg shadow-md hover:bg-blue-700 transition-all">
+            <span pButtonLabel>Sign In</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
