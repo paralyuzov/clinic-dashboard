@@ -1,0 +1,82 @@
+<div class="p-8">
+  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="name" class="w-full" formControlName="name" />
+        <label for="name">Full Name</label>
+      </p-floatlabel>
+      @if (isInvalid('name')) {
+      <p-message severity="error" size="small" variant="simple">
+        Full Name is required.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="number" id="age" class="w-full" min="0" max="100" formControlName="age" />
+        <label for="age">Age</label>
+      </p-floatlabel>
+      @if (isInvalid('age')) {
+      <p-message severity="error" size="small" variant="simple">
+        Age must be between 0 and 100.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="email" class="w-full" formControlName="email" />
+        <label for="email">Email</label>
+      </p-floatlabel>
+      @if (isInvalid('email')) {
+      <p-message severity="error" size="small" variant="simple">
+        Email is required and must be a valid email address.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="phone" class="w-full" formControlName="phone" />
+        <label for="phone">Phone</label>
+      </p-floatlabel>
+      @if (isInvalid('phone')) {
+      <p-message severity="error" size="small" variant="simple">
+        Phone is required and must be a valid phone number.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="specialization" class="w-full" formControlName="specialization" />
+        <label for="specialization">Specialization</label>
+      </p-floatlabel>
+      @if (isInvalid('specialization')) {
+      <p-message severity="error" size="small" variant="simple">
+        Specialization is required.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <textarea pTextarea id="bio" pTextarea [autoResize]="true" rows="5" cols="30" style="resize: none"
+          class="w-full" formControlName="bio"></textarea>
+        <label for="bio">Biography</label>
+      </p-floatlabel>
+      @if (isInvalid('bio')) {
+      <p-message severity="error" size="small" variant="simple">
+        Biography is required.
+      </p-message>
+      }
+    </div>
+    <div class="flex justify-center items-center gap-4 ">
+      <p-button [disabled]="doctorForm.invalid || formSubmitted" variant="outlined" label="Submit" severity="primary" type="submit"></p-button>
+
+      <p-button [disabled]="formSubmitted" label="Close"  severity="danger" variant="outlined" type="button" (click)="dialogRef.close()">
+      </p-button>
+    </div>
+  </form>
+</div>
