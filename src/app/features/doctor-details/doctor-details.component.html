@@ -1,8 +1,6 @@
 @if(loading$ | async) {
-  <app-spinner/>
-}
-
-@if(currentDoctor$ | async; as doctor) {
+<app-spinner />
+} @if(currentDoctor$ | async; as doctor) {
 <div class="flex justify-center items-center">
   <div class="p-8 flex flex-col items-center gap-6">
     <div class="absolute top-4 right-4">
@@ -11,8 +9,36 @@
         [rounded]="true"
         [text]="true"
         [raised]="true"
+        pTooltip="Close"
+        tooltipPosition="top"
+        placeholder="autoHide: true"
         severity="danger"
         (onClick)="onClose()"
+      />
+    </div>
+    <div class="absolute top-4 left-4 flex space-x-2">
+      <p-button
+        (onClick)="openEditDoctor()"
+        icon="pi pi-user-edit"
+        pTooltip="Edit Doctor"
+        tooltipPosition="top"
+        placeholder="autoHide: true"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="warn"
+      />
+      <p-confirmdialog />
+      <p-button
+        (onClick)="onDelete($event)"
+        icon="pi pi-trash"
+        pTooltip="Delete Doctor"
+        tooltipPosition="top"
+        placeholder="autoHide: true"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="danger"
       />
     </div>
     <img
