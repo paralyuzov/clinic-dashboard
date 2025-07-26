@@ -27,4 +27,17 @@ export class ApiService {
       doctorData
     );
   }
+
+  editDoctorById(id: string, doctorData: CreateDoctorDto) {
+    return this.http.put<DoctorResponse>(
+      `${this.baseUrl}/doctors/${id}`,
+      doctorData
+    );
+  }
+
+  deleteDoctorById(id: string) {
+    return this.http.delete<{ message: string }>(
+      `${this.baseUrl}/doctors/${id}`
+    );
+  }
 }
