@@ -1,7 +1,7 @@
 <div class="text-sm tracking-tighter">
   <p-table
     #dt
-    [value]="appointments"
+    [value]="(appointments$ | async) ?? []"
     size="small"
     [scrollable]="true"
     scrollHeight="400px"
@@ -28,7 +28,6 @@
         <th>Doctor</th>
         <th>Date</th>
         <th>Time</th>
-        <th>Department</th>
         <th>Reason</th>
         <th>Status</th>
         <th>Actions</th>
@@ -47,8 +46,7 @@
           </div>
         </td>
         <td>{{ appointment.date }}</td>
-        <td>{{ appointment.time }}</td>
-        <td>{{ appointment.department }}</td>
+        <td>{{ appointment.hours }}</td>
         <td>{{ appointment.reason }}</td>
         <td>
           @if(appointment.status === 'Scheduled') {
