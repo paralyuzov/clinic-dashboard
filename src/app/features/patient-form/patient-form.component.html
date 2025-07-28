@@ -1,0 +1,124 @@
+<div class="p-8">
+  <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="name" class="w-full" formControlName="name" />
+        <label for="name">Full Name</label>
+      </p-floatlabel>
+      @if (isInvalid('name')) {
+      <p-message severity="error" size="small" variant="simple">
+        Full Name is required.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="number" id="age" class="w-full" min="0" max="100" formControlName="age" />
+        <label for="age">Age</label>
+      </p-floatlabel>
+      @if (isInvalid('age')) {
+      <p-message severity="error" size="small" variant="simple">
+        Age must be between 0 and 100.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="gender" class="w-full" formControlName="gender" />
+        <label for="gender">Gender</label>
+      </p-floatlabel>
+      @if (isInvalid('gender')) {
+      <p-message severity="error" size="small" variant="simple">
+        Gender is required.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="email" class="w-full" formControlName="email" />
+        <label for="email">Email</label>
+      </p-floatlabel>
+      @if (isInvalid('email')) {
+      <p-message severity="error" size="small" variant="simple">
+        Email is required and must be a valid email address.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="phone" class="w-full" formControlName="phone" />
+        <label for="phone">Phone</label>
+      </p-floatlabel>
+      @if (isInvalid('phone')) {
+      <p-message severity="error" size="small" variant="simple">
+        Phone is required and must be a valid phone number.
+      </p-message>
+      }
+    </div>
+
+    <div>
+      <p-floatlabel variant="on">
+        <input pInputText type="text" id="ucn" class="w-full" formControlName="ucn" />
+        <label for="ucn">UCN</label>
+      </p-floatlabel>
+      @if (isInvalid('ucn')) {
+      <p-message severity="error" size="small" variant="simple">
+        UCN is required.
+      </p-message>
+      }
+    </div>
+
+    <div formGroupName="address" class="flex flex-col gap-4">
+      <div>
+        <p-floatlabel variant="on">
+          <input pInputText type="text" id="country" class="w-full" formControlName="country" />
+          <label for="country">Country</label>
+        </p-floatlabel>
+        @if (isInvalid('address.country')) {
+        <p-message severity="error" size="small" variant="simple">
+          Country is required.
+        </p-message>
+        }
+      </div>
+
+      <div>
+        <p-floatlabel variant="on">
+          <input pInputText type="text" id="city" class="w-full" formControlName="city" />
+          <label for="city">City</label>
+        </p-floatlabel>
+        @if (isInvalid('address.city')) {
+        <p-message severity="error" size="small" variant="simple">
+          City is required.
+        </p-message>
+        }
+      </div>
+
+        <div>
+        <p-floatlabel variant="on">
+          <input pInputText type="text" id="street" class="w-full" formControlName="street" />
+          <label for="street">Street</label>
+        </p-floatlabel>
+        @if (isInvalid('address.street')) {
+        <p-message severity="error" size="small" variant="simple">
+          Street is required.
+        </p-message>
+        }
+      </div>
+
+    </div>
+
+
+    <div class="flex justify-center items-center gap-4 ">
+      <p-button [disabled]="patientForm.invalid || formSubmitted" variant="outlined" label="Submit" severity="primary"
+        type="submit"></p-button>
+
+      <p-button [disabled]="formSubmitted" label="Close" severity="danger" variant="outlined" type="button"
+        (click)="dialogRef.close()">
+      </p-button>
+    </div>
+  </form>
+</div>
