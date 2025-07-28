@@ -1,6 +1,6 @@
+@if(patients$ | async; as patients) {
 <div class="text-sm tracking-tighter">
   <p-table
-
     #dt
     [value]="patients"
     size="small"
@@ -9,16 +9,16 @@
     [sortOrder]="-1"
     sortField="date"
     [rowHover]="true"
-    [globalFilterFields]="['name', 'code', 'age', 'gender', 'phone', 'email', 'address', 'doctor', 'status', 'lastVisit']"
+    [globalFilterFields]="['name', 'email', 'ucn', 'phone','address.country', 'address.city']"
   >
     <ng-template #caption>
       <div class="text-start">
         <input
           type="text"
           pInputText
-          size="30"
+          size="39"
           pSize="small"
-          placeholder="Search"
+          placeholder="Search by name, email, ucn, phone, country or city"
           (input)="applyFilterGlobal($event, 'contains')"
         />
       </div>
@@ -26,38 +26,49 @@
     <ng-template #header>
       <tr>
         <th>Name</th>
-        <th>Code</th>
         <th>Age</th>
+        <th>UCN</th>
         <th>Gender</th>
         <th>Phone</th>
         <th>Email</th>
         <th>Address</th>
-        <th>Doctor</th>
         <th>Status</th>
-        <th>Last Visit</th>
         <th>Actions</th>
       </tr>
     </ng-template>
-    <ng-template #body let-patient>
+    <ng-template pTemplate="body" #body let-patient>
       <tr>
         <td>{{ patient.name }}</td>
-        <td>{{ patient.code }}</td>
         <td>{{ patient.age }}</td>
+        <td>{{ patient.ucn }}</td>
         <td>{{ patient.gender }}</td>
         <td>{{ patient.phone }}</td>
-        <td>{{ patient.email }}</td>
-        <td>{{ patient.address }}</td>
-        <td>{{ patient.doctor }}</td>
+        <td><a href="mailto:{{ patient.email }}">{{ patient.email }}</a></td>
+        <td>{{ patient.address.country | countryCode }}, {{ patient.address.city }}, {{ patient.address.street }}</td>
         <td>
-          <p-message variant="simple" [severity]="patient.status === 'Active' ? 'success' : (patient.status === 'Inactive' ? 'warn' : 'info')">
+          <p-message
+            variant="simple"
+            [severity]="
+              patient.status === 'Active'
+                ? 'success'
+                : patient.status === 'Inactive'
+                ? 'warn'
+                : 'info'
+            "
+          >
             {{ patient.status }}
           </p-message>
         </td>
-        <td>{{ patient.lastVisit }}</td>
         <td>
-          <p-button [outlined]="true" rounded="true" icon="pi pi-file-edit"></p-button>
+          <p-button
+            [outlined]="true"
+            rounded="true"
+            icon="pi pi-file-edit"
+            (click)="openPatientDetails(patient._id)"
+          ></p-button>
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+}
