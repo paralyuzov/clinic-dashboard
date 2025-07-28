@@ -11,6 +11,8 @@ import { UserService } from '../../../core/services/user.service';
 import { AsyncPipe } from '@angular/common';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DoctorFormComponent } from '../../../features/doctor-form/doctor-form.component';
+import { PatientFormComponent } from '../../../features/patient-form/patient-form.component';
+import { AppointmentFormComponent } from '../../../features/appointment-form/appointment-form.component';
 @Component({
   selector: 'app-navigation',
   imports: [
@@ -42,9 +44,30 @@ export class NavigationComponent implements OnInit {
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
       style: { width: '50vw' },
       draggable: false,
-      resizable: false
+      resizable: false,
     });
+  }
 
+  openPatientForm() {
+    const ref = this.dialogService.open(PatientFormComponent, {
+      header: 'Create Patient',
+      modal: true,
+      breakpoints: { '1199px': '75vw', '575px': '90vw' },
+      style: { width: '50vw' },
+      draggable: false,
+      resizable: false,
+    });
+  }
+
+  openAppointmentForm() {
+    const ref = this.dialogService.open(AppointmentFormComponent, {
+      header: 'Create Appointment',
+      modal: true,
+      breakpoints: { '1199px': '75vw', '575px': '90vw' },
+      draggable: false,
+      resizable: false,
+      dismissableMask: true,
+    });
   }
 
   ngOnInit() {
