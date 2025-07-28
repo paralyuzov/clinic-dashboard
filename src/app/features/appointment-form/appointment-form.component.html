@@ -1,0 +1,71 @@
+<form [formGroup]="appoitmentForm" (ngSubmit)="onSubmit()" class="grid grid-cols-2 gap-4">
+  <div class="">
+    @if(doctors$ | async; as doctors) {
+    <p-select size="small" [options]="doctors" [optionValue]="'_id'" formControlName="doctor" optionLabel="name"
+      [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Doctor">
+      <ng-template #selectedItem let-selectedOption>
+        <div class="flex items-center gap-2">
+          <div>{{ selectedOption.name }}</div>
+        </div>
+      </ng-template>
+      <ng-template let-doctor #item>
+        <div class="flex items-center gap-2">
+          <div>{{ doctor.name }}</div>
+        </div>
+      </ng-template>
+    </p-select>
+    }
+  </div>
+  <div class="justify-self-end">
+    @if(patients$ | async;as patients) {
+    <p-select size="small" [options]="patients" formControlName="patient" [optionValue]="'_id'" optionLabel="name"
+      [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Patient">
+      <ng-template #selectedItem let-selectedOption>
+        <div class="flex items-center gap-2">
+          <div>{{ selectedOption.name }}</div>
+        </div>
+      </ng-template>
+      <ng-template let-patient #item>
+        <div class="flex items-center gap-2">
+          <div>{{ patient.name }}</div>
+        </div>
+      </ng-template>
+    </p-select>
+    }
+  </div>
+  <div class="col-span">
+    <p-datepicker formControlName="date" [inline]="true" [minDate]="minDate" [disabledDays]="[0, 6]"
+      [firstDayOfWeek]="1" [dateFormat]="'dd.mm.yy'" [disabledDates]="(fullDays$ | async) ?? []"></p-datepicker>
+  </div>
+  <div class="grid grid-cols-3 p-4">
+    @for(slot of allSlots; track slot) {
+
+    <p-button (onClick)="
+        appoitmentForm.get('time')?.value === slot ? appoitmentForm.get('time')?.setValue(null) : appoitmentForm.get('time')?.setValue(slot)" label="{{ slot }}" size="small" variant="outlined" severity="primary" [raised]="true"
+        [disabled]="unavailableSlots.includes(slot)" [styleClass]="appoitmentForm.get('time')?.value === slot
+    ? 'dark:shadow-inner! shadow-green-600! shadow-inner! shadow-green-200! ring-1 scale-105'
+    : unavailableSlots.includes(slot)
+      ? 'shadow-inner! shadow-red-500! text-red-400!'
+      : ''">
+      </p-button>
+
+    }
+  </div>
+  <div class="col-span-2">
+    <div class="grid grid-cols-2 gap-2">
+      <p-floatlabel variant="on">
+        <textarea pTextarea id="reason" pTextarea [autoResize]="true" rows="3" cols="30" style="resize: none"
+          class="w-full" formControlName="reason"></textarea>
+        <label for="reason">Reason</label>
+      </p-floatlabel>
+      <p-floatlabel variant="on">
+        <textarea pTextarea id="notes" pTextarea [autoResize]="true" rows="3" cols="30" style="resize: none"
+          class="w-full" formControlName="notes"></textarea>
+        <label for="notes">Notes</label>
+      </p-floatlabel>
+    </div>
+  </div>
+  <p-button [disabled]="formSubmitted" variant="outlined" label="Submit" severity="primary" type="submit"></p-button>
+  <p-button (onClick)="onClose()" variant="outlined" label="Close" severity="danger"
+    class="justify-self-end"></p-button>
+</form>
