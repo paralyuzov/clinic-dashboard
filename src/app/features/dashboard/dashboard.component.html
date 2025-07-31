@@ -7,7 +7,7 @@
       <div>
         <img class="aspect-auto w-60" src="doctor1.png" alt="" />
       </div>
-      <p class="text-center font-mono p-2">54 DOC's</p>
+      <p class="text-center font-mono p-2">{{numberOfDoctors}} DOC's</p>
     </div>
 
     <div
@@ -16,7 +16,7 @@
       <div>
         <img class="aspect-auto w-60" src="patient1.png" alt="" />
       </div>
-      <p class="text-center font-mono p-2">134 Patients</p>
+      <p class="text-center font-mono p-2">{{numberOfPatients}} Patients</p>
     </div>
     <div
       class="flex flex-col items-center shadow-inner dark:shadow-inner shadow-slate-400 gap-2 rounded-lg"
@@ -24,7 +24,7 @@
       <div>
         <img class="aspect-auto w-60" src="appointments1.png" alt="" />
       </div>
-      <p class="text-center font-mono p-2">Today Appointments 28</p>
+      <p class="text-center font-mono p-2">Today Appointments {{appointmentsToday}}</p>
     </div>
     <div class="col-span-2 shadow-inner dark:shadow-inner shadow-slate-400 p-1">
       <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">Appointments Overview</p>
