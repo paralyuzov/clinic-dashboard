@@ -9,7 +9,7 @@ import { CreateDoctorDto, Doctor } from '../models/doctor.model';
 export class DoctorService {
   private apiService = inject(ApiService);
 
-  private doctors$$ = new BehaviorSubject<Doctor[] | null>(null);
+  private doctors$$ = new BehaviorSubject<Doctor[]>([]);
   public readonly doctors$ = this.doctors$$.asObservable();
   private currentDoctor$$ = new BehaviorSubject<Doctor | null>(null);
   public readonly currentDoctor$ = this.currentDoctor$$.asObservable();
@@ -99,5 +99,19 @@ export class DoctorService {
         this.loading$$.next(false);
       },
     });
+  }
+
+  numberOfDoctors(): number {
+    return this.doctors$$.getValue()?.length || 0;
+  }
+
+  numberOfDoctorsByMonth(): number[] {
+    const doctors = this.doctors$$.getValue();
+    const counts = Array(12).fill(0);
+    doctors.forEach((doctor) => {
+      const month = new Date(doctor.createdAt).getMonth();
+      counts[month]++;
+    });
+    return counts;
   }
 }
