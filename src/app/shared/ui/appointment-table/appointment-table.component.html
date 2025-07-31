@@ -8,6 +8,8 @@
     [sortOrder]="-1"
     sortField="date"
     [rowHover]="true"
+    editMode="row"
+    dataKey="id"
     [globalFilterFields]="['department', 'doctor.name', 'patient.name']"
   >
     <ng-template #caption>
@@ -33,8 +35,8 @@
         <th>Actions</th>
       </tr>
     </ng-template>
-    <ng-template #body let-appointment>
-      <tr>
+    <ng-template #body let-appointment let-ri="rowIndex">
+      <tr [pEditableRow]="appointment">
         <td>
           <div>
             <div>{{ appointment.patient.name }}</div>
@@ -49,22 +51,62 @@
         <td>{{ appointment.hours }}</td>
         <td>{{ appointment.reason }}</td>
         <td>
-          @if(appointment.status === 'Scheduled') {
-          <p-message variant="simple" severity="info">scheduled</p-message>
-          } @else if(appointment.status === "Completed") {
-          <p-message variant="simple" severity="success">completed</p-message>
-          } @else if(appointment.status === "Cancelled") {
-          <p-message variant="simple" severity="error">cancelled</p-message>
-          } @else if(appointment.status === "Pending") {
-          <p-message variant="simple" severity="warn">pending</p-message>
-          }
+          <p-cellEditor>
+            <ng-template #input>
+              <p-select
+                [options]="statuses"
+                size="small"
+                appendTo="body"
+                [(ngModel)]="appointment.status"
+                [style]="{ width: '100%' }"
+              />
+            </ng-template>
+            <ng-template #output>
+              <p-tag
+              [rounded]="true"
+                [value]="appointment.status"
+                [severity]="getSeverity(appointment.status)"
+              />
+            </ng-template>
+          </p-cellEditor>
         </td>
         <td>
-          <p-button
-            [outlined]="true"
-            rounded="true"
-            icon="pi pi-file-edit"
-          ></p-button>
+          <button
+                    *ngIf="!editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pInitEditableRow
+                    icon="pi pi-pencil"
+                    (click)="onRowEditInit(appointment)"
+                    text
+                    rounded
+                    severity="secondary"
+                ></button>
+                <button
+                    *ngIf="editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pSaveEditableRow
+                    icon="pi pi-check"
+                    (click)="onRowEditSave(appointment)"
+                    text
+                    rounded
+                    severity="secondary"
+                ></button>
+                <button
+                    *ngIf="editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pCancelEditableRow
+                    icon="pi pi-times"
+                    (click)="onRowEditCancel(appointment, ri)"
+                    text
+                    rounded
+                    severity="secondary"
+                ></button>
         </td>
       </tr>
     </ng-template>
