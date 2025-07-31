@@ -1,1 +1,6 @@
-  <p-chart type="bar" [data]="data" [options]="options" class="h-[30rem]" />
+@if(loading) {
+<app-spinner />
+} @else {
+<p-chart type="bar" [data]="data" [options]="options" class="w-full p-2" />
+
+}
