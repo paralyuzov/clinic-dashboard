@@ -91,4 +91,19 @@ export class PatientService {
       },
     });
   }
+
+  numberOfPatients(): number {
+    return this.patients$$.getValue()?.length || 0;
+  }
+
+  numberPatientByMonth(): number[] {
+  const patients = this.patients$$.getValue();
+  const counts = Array(12).fill(0);
+  patients.forEach(patient => {
+    const month = new Date(patient.createdAt).getMonth();
+    counts[month]++;
+  });
+  return counts;
+}
+
 }
