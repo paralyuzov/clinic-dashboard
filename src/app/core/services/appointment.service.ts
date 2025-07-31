@@ -42,7 +42,6 @@ export class AppointmentService {
     this.loading$$.next(true);
     this.apiService.getAppointments().subscribe({
       next: (appointments) => {
-        console.log('Fetched appointments:', appointments);
         this.appointments$$.next(appointments);
         this.loading$$.next(false);
       },
@@ -84,5 +83,31 @@ export class AppointmentService {
 
   resetAppointmentsByDate() {
     this.appointmentsByDate$$.next([]);
+  }
+
+  appointmentsToday() {
+    const today = new Date();
+    return this.appointments$$.getValue().filter((appointment) => {
+      const appointmentDate = new Date(appointment.date);
+      return (
+        appointmentDate.getFullYear() === today.getFullYear() &&
+        appointmentDate.getMonth() === today.getMonth() &&
+        appointmentDate.getDate() === today.getDate()
+      );
+    });
+  }
+
+  numberOfAppointmentsToday(): number {
+    return this.appointmentsToday().length;
+  }
+
+  numberOfAppointmentsByMonth(): number[] {
+    const appointments = this.appointments$$.getValue();
+    const counts = Array(12).fill(0);
+    appointments.forEach((appointment) => {
+      const month = new Date(appointment.date).getMonth();
+      counts[month]++;
+    });
+    return counts;
   }
 }
