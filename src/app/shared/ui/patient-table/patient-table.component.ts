@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { TableModule, Table } from 'primeng/table';
 import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
@@ -37,7 +37,7 @@ export interface Patient {
   styleUrl: './patient-table.component.css',
   providers: [DialogService],
 })
-export class PatientTableComponent implements OnInit {
+export class PatientTableComponent {
   @ViewChild('dt') dt: Table | undefined;
 
   patientService = inject(PatientService);
@@ -46,9 +46,6 @@ export class PatientTableComponent implements OnInit {
   error$ = this.patientService.error$;
   dialogService = inject(DialogService)
 
-  ngOnInit(): void {
-    this.patientService.onGetPatients();
-  }
 
   openPatientDetails(id: string) {
      const ref = this.dialogService.open(PatientDetailsComponent, {

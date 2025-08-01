@@ -31,6 +31,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   ngOnInit() {
+    this.patientService.onGetPatients();
+    this.doctorService.onGetDoctors();
+    this.appointmentService.fetchAppointments();
     this.subscriptions.add(
       this.appointmentService.appointments$.subscribe(() => {
         this.appointmentsToday =

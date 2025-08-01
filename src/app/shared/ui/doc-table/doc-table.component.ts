@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule,Table } from 'primeng/table';
 import { DoctorService } from '../../../core/services/doctor.service';
@@ -14,7 +14,7 @@ import { DoctorDetailsComponent } from '../../../features/doctor-details/doctor-
   styleUrl: './doc-table.component.css',
   providers: [DialogService]
 })
-export class DocTableComponent implements OnInit {
+export class DocTableComponent  {
   @ViewChild('dt') dt: Table | undefined;
   doctorService = inject(DoctorService);
   doctors$ = this.doctorService.doctors$;
@@ -24,9 +24,6 @@ export class DocTableComponent implements OnInit {
 
   visible: boolean = false;
 
-  ngOnInit() {
-    this.doctorService.onGetDoctors();
-  }
 
   applyFilterGlobal($event: Event, stringVal: string) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);

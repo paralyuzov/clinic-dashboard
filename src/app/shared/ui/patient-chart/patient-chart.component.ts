@@ -12,23 +12,18 @@ import { PatientService } from '../../../core/services/patient.service';
 import { Subscription } from 'rxjs';
 import { DoctorService } from '../../../core/services/doctor.service';
 import { AppointmentService } from '../../../core/services/appointment.service';
-import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-patient-chart',
-  imports: [ChartModule, SpinnerComponent],
+  imports: [ChartModule],
   templateUrl: './patient-chart.component.html',
   styleUrl: './patient-chart.component.css',
 })
 export class PatientChartComponent implements OnInit, OnDestroy {
-  loading = true;
   patientService = inject(PatientService);
   doctorService = inject(DoctorService);
   appointmentService = inject(AppointmentService);
   subscription = new Subscription();
-  patientByMonth?: { [key: string]: number };
-  doctorsByMonth?: { [key: string]: number };
-  appointmentsByMonth?: { [key: string]: number };
   data: any;
   options: any;
 
@@ -36,48 +31,33 @@ export class PatientChartComponent implements OnInit, OnDestroy {
   constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    let appointmentsLoaded = false;
-    let doctorsLoaded = false;
-    let patientsLoaded = false;
     this.initChart();
     this.subscription.add(
-      this.patientService.patients$.subscribe(() => {
-        const patientData = this.patientService.numberPatientByMonth();
-        if (this.data && this.data.datasets && this.data.datasets[0]) {
-          this.data.datasets[0].data = patientData;
-        }
-        patientsLoaded = true;
-        this.checkAllLoaded(patientsLoaded, doctorsLoaded, appointmentsLoaded);
-        this.cd.markForCheck();
-      })
+      this.patientService.patients$.subscribe(() => this.updateChartData())
     );
     this.subscription.add(
-      this.doctorService.doctors$.subscribe(() => {
-        const doctorData = this.doctorService.numberOfDoctorsByMonth();
-        if (this.data && this.data.datasets && this.data.datasets[1]) {
-          this.data.datasets[1].data = doctorData;
-        }
-        doctorsLoaded = true;
-        this.checkAllLoaded(patientsLoaded, doctorsLoaded, appointmentsLoaded);
-        this.cd.markForCheck();
-      })
+      this.doctorService.doctors$.subscribe(() => this.updateChartData())
     );
     this.subscription.add(
-      this.appointmentService.appointments$.subscribe(() => {
-        const appointmentData =
-          this.appointmentService.numberOfAppointmentsByMonth();
-        if (this.data && this.data.datasets && this.data.datasets[2]) {
-          this.data.datasets[2].data = appointmentData;
-        }
-        appointmentsLoaded = true;
-        this.checkAllLoaded(patientsLoaded, doctorsLoaded, appointmentsLoaded);
-        this.cd.markForCheck();
-      })
+      this.appointmentService.appointments$.subscribe(() => this.updateChartData())
     );
   }
 
-  checkAllLoaded(patientsLoaded: boolean, doctorsLoaded: boolean, appointmentsLoaded: boolean) {
-    this.loading = !(patientsLoaded && doctorsLoaded && appointmentsLoaded);
+  private updateChartData() {
+    if (!this.data || !this.data.datasets) return;
+    const patientData = this.patientService.numberPatientByMonth();
+    const doctorData = this.doctorService.numberOfDoctorsByMonth();
+    const appointmentData = this.appointmentService.numberOfAppointmentsByMonth();
+    this.data = {
+      ...this.data,
+      datasets: [
+        { ...this.data.datasets[0], data: patientData },
+        { ...this.data.datasets[1], data: doctorData },
+        { ...this.data.datasets[2], data: appointmentData }
+      ]
+    };
+
+    this.cd.markForCheck();
   }
 
   ngOnDestroy(): void {

@@ -56,7 +56,6 @@ export class AppointmentTableComponent implements OnInit {
   statuses!: SelectItem[];
 
   ngOnInit() {
-    this.appointmentService.fetchAppointments();
     this.statuses = [
       { label: 'Scheduled', value: 'Scheduled' },
       { label: 'Completed', value: 'Completed' },
