@@ -1,19 +1,3 @@
-export interface Appointment {
-  id: number;
-  patient: {
-    name: string;
-    code: string;
-  };
-  doctor: {
-    name: string;
-    id: string;
-  };
-  date: string;
-  time: string;
-  department: string;
-  reason: string;
-  status: 'Scheduled' | 'Completed' | 'Cancelled' | 'Pending';
-}
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -28,6 +12,7 @@ import { SelectModule } from 'primeng/select';
 import { SelectItem } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 import { FormsModule } from '@angular/forms';
+import { AppointmentFull } from '../../../core/models/appointment.model';
 
 @Component({
   selector: 'app-appointment-table',
@@ -52,6 +37,7 @@ export class AppointmentTableComponent implements OnInit {
   appointmentService = inject(AppointmentService);
   appointments$ = this.appointmentService.appointments$;
   editing = false;
+  clonedAppointments: { [s: string]: AppointmentFull } = {};
 
   statuses!: SelectItem[];
 
@@ -76,19 +62,27 @@ export class AppointmentTableComponent implements OnInit {
     }
   }
 
-  onRowEditInit(appointment: Appointment) {
+  onRowEditInit(appointment: AppointmentFull) {
     this.editing = true;
+    this.clonedAppointments[appointment._id] = { ...appointment };
   }
 
-  onRowEditCancel(appointment: Appointment, index: number) {
-
+  onRowEditCancel(appointment: AppointmentFull, index: number) {
     this.editing = false;
-  }
-
-   onRowEditSave(appointment: Appointment) {
-    this.editing = false;
-      console.log(appointment)
+    const originalAppointment = this.clonedAppointments[appointment._id];
+    if (originalAppointment) {
+      appointment.status = originalAppointment.status;
+      delete this.clonedAppointments[appointment._id];
     }
+  }
+
+  onRowEditSave(appointment: AppointmentFull) {
+    this.editing = false;
+    this.appointmentService.onChangeAppointmentStatus(
+      appointment._id,
+      appointment.status
+    );
+  }
 
   applyFilterGlobal($event: Event, stringVal: string) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
