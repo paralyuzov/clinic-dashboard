@@ -20,7 +20,8 @@ export class AppointmentService {
   private error$$ = new BehaviorSubject<string | null>(null);
   public readonly error$ = this.error$$.asObservable();
   private appointmentsByDate$$ = new BehaviorSubject<Appointment[]>([]);
-  public readonly appointmentsByDate$ = this.appointmentsByDate$$.asObservable();
+  public readonly appointmentsByDate$ =
+    this.appointmentsByDate$$.asObservable();
   private fullDays$$ = new BehaviorSubject<Date[]>([]);
   public readonly fullDays$ = this.fullDays$$.asObservable();
 
@@ -109,5 +110,22 @@ export class AppointmentService {
       counts[month]++;
     });
     return counts;
+  }
+
+  onChangeAppointmentStatus(
+    appointmentId: string,
+    status: 'Scheduled' | 'Completed' | 'Cancelled'
+  ) {
+    this.loading$$.next(true);
+    this.apiService.changeAppointmentStatus(appointmentId, status).subscribe({
+      next: (response) => {
+        this.fetchAppointments();
+        this.loading$$.next(false);
+      },
+      error: (error) => {
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
   }
 }
