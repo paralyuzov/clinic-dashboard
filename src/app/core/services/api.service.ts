@@ -99,4 +99,14 @@ export class ApiService {
       `${this.baseUrl}/appointments/${doctorId}/full-days`
     );
   }
+
+  changeAppointmentStatus(
+    appointmentId: string,
+    status: 'Scheduled' | 'Completed' | 'Cancelled'
+  ) {
+    return this.http.put<AppointmentResponse>(
+      `${this.baseUrl}/appointments/${appointmentId}/status`,
+      { status }
+    );
+  }
 }
