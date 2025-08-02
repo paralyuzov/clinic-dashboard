@@ -1,7 +1,7 @@
 import { Doctor } from './doctor.model';
 import { Patient } from './patient.model';
 export interface Appointment {
-  _id: number;
+  _id: string;
   patient: string;
   doctor: string;
   date: string;
