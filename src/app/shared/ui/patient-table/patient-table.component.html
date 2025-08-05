@@ -1,8 +1,8 @@
-@if(patients$ | async; as patients) {
+
 <div class="text-sm tracking-tighter">
   <p-table
     #dt
-    [value]="patients"
+    [value]="patients()"
     size="small"
     [scrollable]="true"
     scrollHeight="400px"
@@ -71,4 +71,4 @@
     </ng-template>
   </p-table>
 </div>
-}
+
