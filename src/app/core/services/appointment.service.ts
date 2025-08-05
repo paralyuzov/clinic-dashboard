@@ -6,6 +6,7 @@ import {
   AppointmentFull,
 } from '../models/appointment.model';
 import { BehaviorSubject } from 'rxjs';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,7 @@ export class AppointmentService {
     this.appointmentsByDate$$.asObservable();
   private fullDays$$ = new BehaviorSubject<Date[]>([]);
   public readonly fullDays$ = this.fullDays$$.asObservable();
+  private toastService = inject(ToastService);
 
   onCreateAppointment(appointmentData: AppointmentDto) {
     this.loading$$.next(true);
@@ -31,10 +33,12 @@ export class AppointmentService {
       next: (response) => {
         this.fetchAppointments();
         this.loading$$.next(false);
+        this.toastService.success('Appointment created successfully.');
       },
       error: (error) => {
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to create appointment', error.message);
       },
     });
   }
@@ -121,10 +125,12 @@ export class AppointmentService {
       next: (response) => {
         this.fetchAppointments();
         this.loading$$.next(false);
+        this.toastService.success('Appointment status updated successfully.');
       },
       error: (error) => {
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to update appointment status', error.message);
       },
     });
   }

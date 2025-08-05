@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { LoginDto, RegisterDto, User } from '../models/user.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
 export class UserService {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   private user$$ = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.user$$.asObservable();
@@ -17,6 +19,12 @@ export class UserService {
   public readonly loading$ = this.loading$$.asObservable();
   private error$$ = new BehaviorSubject<string | null>(null);
   public readonly error$ = this.error$$.asObservable();
+
+
+  isAdmin() {
+    const user = this.user$$.value;
+    return user ? user.role === 'admin' : false;
+  }
 
   isLoggedIn(): boolean {
     return !!this.user$$.value || !!localStorage.getItem('accessToken');
@@ -30,6 +38,7 @@ export class UserService {
         localStorage.setItem('accessToken', response.accessToken);
         this.error$$.next(null);
         this.loading$$.next(false);
+        this.toastService.info('You have successfully registered.');
       },
       error: (error) => {
         console.error('Registration failed:', error);
@@ -47,11 +56,13 @@ export class UserService {
         localStorage.setItem('accessToken', response.accessToken);
         this.error$$.next(null);
         this.loading$$.next(false);
+        this.toastService.info(`Welcome ${response.user.name} (${response.user.role.toUpperCase()})!`);
       },
       error: (error) => {
         console.error('Login failed:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Login failed', error.message);
       },
     });
   }
@@ -65,11 +76,13 @@ export class UserService {
         this.error$$.next(null);
         this.loading$$.next(false);
         this.router.navigate(['login']);
+        this.toastService.info('You have successfully logged out.');
       },
       error: (error) => {
         console.error('Logout failed:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Logout failed', error.message);
       },
     });
   }

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Patient, PatientDto } from '../models/patient.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ApiService } from './api.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class PatientService {
   public readonly loading$ = this.loading$$.asObservable();
   private error$$ = new BehaviorSubject<string | null>(null);
   public readonly error$ = this.error$$.asObservable();
+  private toastService = inject(ToastService);
 
   onGetPatients() {
     this.loading$$.next(true);
@@ -55,10 +57,12 @@ export class PatientService {
       next: (response) => {
         this.onGetPatients();
         this.loading$$.next(false);
+        this.toastService.success('Patient created successfully.');
       },
       error: (error) => {
         this.error$$.next(error);
         this.loading$$.next(false);
+        this.toastService.error('Failed to create patient', error.message);
       },
     });
   }
@@ -69,10 +73,12 @@ export class PatientService {
       next: (response) => {
         this.onGetPatients();
         this.loading$$.next(false);
+        this.toastService.success('Patient updated successfully.');
       },
       error: (error) => {
         this.error$$.next(error);
         this.loading$$.next(false);
+        this.toastService.error('Failed to update patient', error.message);
       },
     });
   }
@@ -83,11 +89,13 @@ export class PatientService {
       next: (response) => {
         this.onGetPatients();
         this.loading$$.next(false);
+        this.toastService.success('Patient deleted successfully.');
       },
       error: (error) => {
         console.error('Failed to delete patient:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to delete patient', error.message);
       },
     });
   }

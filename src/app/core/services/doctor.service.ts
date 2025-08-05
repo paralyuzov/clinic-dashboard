@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
 import { CreateDoctorDto, Doctor } from '../models/doctor.model';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ export class DoctorService {
   public readonly loading$ = this.loading$$.asObservable();
   private error$$ = new BehaviorSubject<string | null>(null);
   public readonly error$ = this.error$$.asObservable();
+  private toastService = inject(ToastService);
 
   onGetDoctors() {
     this.loading$$.next(true);
@@ -58,11 +60,13 @@ export class DoctorService {
         this.doctors$$.next([...currentDoctors, response.doctor]);
         this.error$$.next(null);
         this.loading$$.next(false);
+        this.toastService.success('Doctor created successfully.');
       },
       error: (error) => {
         console.error('Failed to create doctor:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to create doctor', error.message);
       },
     });
   }
@@ -75,11 +79,13 @@ export class DoctorService {
         this.currentDoctor$$.next(response.doctor);
         this.error$$.next(null);
         this.loading$$.next(false);
+        this.toastService.success('Doctor edited successfully.');
       },
       error: (error) => {
         console.error('Failed to edit doctor:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to edit doctor', error.message);
       },
     });
   }
@@ -92,11 +98,13 @@ export class DoctorService {
         this.currentDoctor$$.next(null);
         this.error$$.next(null);
         this.loading$$.next(false);
+        this.toastService.success('Doctor deleted successfully.');
       },
       error: (error) => {
         console.error('Failed to delete doctor:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
+        this.toastService.error('Failed to delete doctor', error.message);
       },
     });
   }
