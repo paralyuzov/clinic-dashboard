@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -8,5 +8,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './spinner.component.css'
 })
 export class SpinnerComponent {
-
+  @Input() isOverlay: boolean = true;
+  @Input() size: string = '50px';
 }
