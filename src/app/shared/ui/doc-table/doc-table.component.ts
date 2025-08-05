@@ -1,27 +1,23 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, input, ViewChild } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule,Table } from 'primeng/table';
-import { DoctorService } from '../../../core/services/doctor.service';
-import { AsyncPipe } from '@angular/common';
 import { DialogService } from 'primeng/dynamicdialog';
 import { DoctorDetailsComponent } from '../../../features/doctor-details/doctor-details.component';
+import { Doctor } from '../../../core/models/doctor.model';
 
 
 @Component({
   selector: 'app-doc-table',
-  imports: [TableModule, InputTextModule, AsyncPipe],
+  imports: [TableModule, InputTextModule],
   templateUrl: './doc-table.component.html',
   styleUrl: './doc-table.component.css',
   providers: [DialogService]
 })
 export class DocTableComponent  {
   @ViewChild('dt') dt: Table | undefined;
-  doctorService = inject(DoctorService);
-  doctors$ = this.doctorService.doctors$;
-  loading$ = this.doctorService.loading$;
-  error$ = this.doctorService.error$;
-  dialogService = inject(DialogService);
 
+  dialogService = inject(DialogService);
+  doctors = input<Doctor[]>([]);
   visible: boolean = false;
 
 
