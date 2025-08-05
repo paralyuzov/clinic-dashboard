@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, input, OnInit, signal, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -24,7 +24,6 @@ import { AppointmentFull } from '../../../core/models/appointment.model';
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    AsyncPipe,
     SelectModule,
     TagModule,
     FormsModule,
@@ -35,7 +34,7 @@ import { AppointmentFull } from '../../../core/models/appointment.model';
 export class AppointmentTableComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
   appointmentService = inject(AppointmentService);
-  appointments$ = this.appointmentService.appointments$;
+  appointments = input<AppointmentFull[]>([]);
   editing = false;
   clonedAppointments: { [s: string]: AppointmentFull } = {};
 

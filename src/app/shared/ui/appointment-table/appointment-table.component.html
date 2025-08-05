@@ -1,7 +1,7 @@
 <div class="text-sm tracking-tighter">
   <p-table
     #dt
-    [value]="(appointments$ | async) ?? []"
+    [value]="appointments()"
     size="small"
     [scrollable]="true"
     scrollHeight="400px"
