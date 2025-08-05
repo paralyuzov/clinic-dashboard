@@ -8,6 +8,8 @@ import { AppointmentService } from '../../core/services/appointment.service';
 import { Subscription } from 'rxjs';
 import { PatientService } from '../../core/services/patient.service';
 import { DoctorService } from '../../core/services/doctor.service';
+import { AsyncPipe } from '@angular/common';
+import { SpinnerComponent } from '../../shared/ui/spinner/spinner.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +19,8 @@ import { DoctorService } from '../../core/services/doctor.service';
     PatientTableComponent,
     DocTableComponent,
     NavigationComponent,
+    AsyncPipe,
+    SpinnerComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -29,6 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   numberOfPatients: number = 0;
   numberOfDoctors: number = 0;
   private subscriptions = new Subscription();
+
 
   ngOnInit() {
     this.patientService.onGetPatients();
