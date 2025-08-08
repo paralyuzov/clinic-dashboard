@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'employee';
+  doctorId?: string;
 }
 
 export interface RegisterDto {
@@ -10,6 +11,7 @@ export interface RegisterDto {
   email: string;
   password: string;
   confirmPassword: string;
+  registrationToken: string;
 }
 
 export interface LoginDto {
