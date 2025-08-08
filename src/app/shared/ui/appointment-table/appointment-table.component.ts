@@ -13,6 +13,8 @@ import { SelectItem } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 import { FormsModule } from '@angular/forms';
 import { AppointmentFull } from '../../../core/models/appointment.model';
+import { DialogService } from 'primeng/dynamicdialog';
+import { TreatmentFormComponent } from '../../../features/treatment-form/treatment-form.component';
 
 @Component({
   selector: 'app-appointment-table',
@@ -30,6 +32,7 @@ import { AppointmentFull } from '../../../core/models/appointment.model';
   ],
   templateUrl: './appointment-table.component.html',
   styleUrl: './appointment-table.component.css',
+  providers: [DialogService],
 })
 export class AppointmentTableComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
@@ -39,6 +42,7 @@ export class AppointmentTableComponent implements OnInit {
   clonedAppointments: { [s: string]: AppointmentFull } = {};
 
   statuses!: SelectItem[];
+  dialogService = inject(DialogService);
 
   ngOnInit() {
     this.statuses = [
@@ -77,13 +81,29 @@ export class AppointmentTableComponent implements OnInit {
 
   onRowEditSave(appointment: AppointmentFull) {
     this.editing = false;
-    this.appointmentService.onChangeAppointmentStatus(
-      appointment._id,
-      appointment.status
-    );
+    if (appointment.status === 'Completed') {
+      this.openAppointmentForm(appointment._id, appointment.status);
+    } else {
+      this.appointmentService.onChangeAppointmentStatus(appointment._id, appointment.status);
+    }
   }
 
   applyFilterGlobal($event: Event, stringVal: string) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
+
+  openAppointmentForm(appointmentId: string, status: string) {
+      const ref = this.dialogService.open(TreatmentFormComponent, {
+        header: 'Treatment Form',
+        modal: true,
+        breakpoints: { '1199px': '75vw', '575px': '90vw' },
+        draggable: false,
+        resizable: false,
+        dismissableMask: true,
+        data: {
+          appointmentId: appointmentId,
+          status: status,
+        }
+      });
+    }
 }
