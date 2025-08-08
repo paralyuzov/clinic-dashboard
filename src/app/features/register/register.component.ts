@@ -6,7 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { RegisterDto } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
@@ -22,12 +23,16 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
-  registerForm!: FormGroup;
+  registerForm: FormGroup;
   formSubmitted = false;
   userService = inject(UserService);
   router = inject(Router);
+  activatedRoute = inject(ActivatedRoute);
+  registrationToken: string | null = null;
 
   constructor(private fb: FormBuilder) {
+    this.registrationToken =
+      this.activatedRoute.snapshot.queryParamMap.get('token');
     this.registerForm = this.fb.group(
       {
         name: ['', Validators.required],
@@ -52,10 +57,10 @@ export class RegisterComponent {
 
   onSubmit() {
     this.formSubmitted = true;
-    (this.registerForm.value);
     if (this.registerForm.valid) {
-      this.userService.onRegister(this.registerForm.value);
-      this.userService.loading$.subscribe(loading => {
+      const registerData: RegisterDto = { ...this.registerForm.value, registrationToken: this.registrationToken };
+      this.userService.onRegister(registerData);
+      this.userService.loading$.subscribe((loading) => {
         if (!loading) {
           this.router.navigate(['']);
         }
