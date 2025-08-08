@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { LoginDto, RegisterDto, User } from '../models/user.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
@@ -21,9 +21,12 @@ export class UserService {
   public readonly error$ = this.error$$.asObservable();
 
 
-  isAdmin() {
-    const user = this.user$$.value;
-    return user ? user.role === 'admin' : false;
+  get isAdmin() {
+    return this.user$$.value ? this.user$$.value.role === 'admin' : false;
+  }
+
+  get currentUser() {
+    return this.user$$.value;
   }
 
   isLoggedIn(): boolean {
@@ -41,14 +44,13 @@ export class UserService {
         this.toastService.info('You have successfully registered.');
       },
       error: (error) => {
-        console.error('Registration failed:', error);
-        this.error$$.next(error.message);
+        this.error$$.next(error.error.message);
         this.loading$$.next(false);
       },
     });
   }
 
-  onLogin(loginDto:LoginDto) {
+  onLogin(loginDto: LoginDto) {
     this.loading$$.next(true);
     this.authService.login(loginDto).subscribe({
       next: (response) => {
@@ -56,13 +58,14 @@ export class UserService {
         localStorage.setItem('accessToken', response.accessToken);
         this.error$$.next(null);
         this.loading$$.next(false);
-        this.toastService.info(`Welcome ${response.user.name} (${response.user.role.toUpperCase()})!`);
+        this.toastService.info(
+          `Welcome ${response.user.name} (${response.user.role.toUpperCase()})!`
+        );
       },
       error: (error) => {
-        console.error('Login failed:', error);
+        this.toastService.error(error.error?.message || error.message);
         this.error$$.next(error.message);
         this.loading$$.next(false);
-        this.toastService.error('Login failed', error.message);
       },
     });
   }
@@ -102,6 +105,4 @@ export class UserService {
       },
     });
   }
-
-
 }
