@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { employeeGuard } from './core/guards/employee.guard';
 
 export const routes: Routes = [
   {
@@ -9,7 +11,15 @@ export const routes: Routes = [
       import('./features/dashboard/dashboard.component').then(
         (m) => m.DashboardComponent
       ),
-    canActivate: [authGuard],
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'employee-dashboard',
+    loadComponent: () =>
+      import('./features/employee-dashboard/employee-dashboard.component').then(
+        (m) => m.EmployeeDashboardComponent
+      ),
+    canActivate: [authGuard, employeeGuard],
   },
   {
     path: 'register',
