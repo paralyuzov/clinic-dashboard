@@ -5,7 +5,7 @@ import {
   Doctor,
   DoctorResponse,
 } from '../models/doctor.model';
-import { Patient, PatientDto, PatientResponse } from '../models/patient.model';
+import { MedicalHistoryEntry, Patient, PatientDto, PatientResponse } from '../models/patient.model';
 import {
   Appointment,
   AppointmentDto,
@@ -102,11 +102,18 @@ export class ApiService {
 
   changeAppointmentStatus(
     appointmentId: string,
-    status: 'Scheduled' | 'Completed' | 'Cancelled'
+    status: 'Scheduled' | 'Completed' | 'Cancelled',
+    medicalHistory?: MedicalHistoryEntry
   ) {
     return this.http.put<AppointmentResponse>(
       `${this.baseUrl}/appointments/${appointmentId}/status`,
-      { status }
+      { status, medicalHistory }
+    );
+  }
+
+  getAppointmentsByDoctorId(doctorId: string) {
+    return this.http.get<AppointmentFull[]>(
+      `${this.baseUrl}/appointments/appointments-by-doctor/${doctorId}`
     );
   }
 }
