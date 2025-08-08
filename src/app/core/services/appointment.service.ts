@@ -7,6 +7,7 @@ import {
 } from '../models/appointment.model';
 import { BehaviorSubject } from 'rxjs';
 import { ToastService } from './toast.service';
+import { MedicalHistoryEntry } from '../models/patient.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,8 @@ export class AppointmentService {
   private fullDays$$ = new BehaviorSubject<Date[]>([]);
   public readonly fullDays$ = this.fullDays$$.asObservable();
   private toastService = inject(ToastService);
+  private appointmentsByDoctor$$ = new BehaviorSubject<AppointmentFull[]>([]);
+  public readonly appointmentsByDoctor$ = this.appointmentsByDoctor$$.asObservable();
 
   onCreateAppointment(appointmentData: AppointmentDto) {
     this.loading$$.next(true);
@@ -118,10 +121,11 @@ export class AppointmentService {
 
   onChangeAppointmentStatus(
     appointmentId: string,
-    status: 'Scheduled' | 'Completed' | 'Cancelled'
+    status: 'Scheduled' | 'Completed' | 'Cancelled',
+    medicalHistory?: MedicalHistoryEntry
   ) {
     this.loading$$.next(true);
-    this.apiService.changeAppointmentStatus(appointmentId, status).subscribe({
+    this.apiService.changeAppointmentStatus(appointmentId, status, medicalHistory).subscribe({
       next: (response) => {
         this.fetchAppointments();
         this.loading$$.next(false);
@@ -130,7 +134,24 @@ export class AppointmentService {
       error: (error) => {
         this.error$$.next(error.message);
         this.loading$$.next(false);
-        this.toastService.error('Failed to update appointment status', error.message);
+        this.toastService.error(
+          'Failed to update appointment status',
+          error.message
+        );
+      },
+    });
+  }
+
+  onGetAppointmentsByDoctorId(doctorId: string) {
+    this.loading$$.next(true);
+    this.apiService.getAppointmentsByDoctorId(doctorId).subscribe({
+      next: (appointments) => {
+        this.appointmentsByDoctor$$.next(appointments);
+        this.loading$$.next(false);
+      },
+      error: (error) => {
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
       },
     });
   }
