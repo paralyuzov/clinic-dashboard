@@ -1,8 +1,22 @@
-import { HttpErrorResponse, HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpInterceptorFn,
+  HttpRequest,
+  HttpHandlerFn,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, throwError, BehaviorSubject, filter, take, finalize, Observable } from 'rxjs';
+import {
+  catchError,
+  switchMap,
+  throwError,
+  BehaviorSubject,
+  filter,
+  take,
+  finalize,
+} from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastService } from '../services/toast.service';
 
 let isRefreshing = false;
 let refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -10,9 +24,15 @@ let refreshTokenSubject = new BehaviorSubject<string | null>(null);
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const toastService = inject(ToastService);
 
-  const authEndpoints = ['/auth/register', '/auth/login', '/auth/logout', '/auth/refresh-token'];
-  if (authEndpoints.some(endpoint => req.url.includes(endpoint))) {
+  const authEndpoints = [
+    '/auth/register',
+    '/auth/login',
+    '/auth/logout',
+    '/auth/refresh-token',
+  ];
+  if (authEndpoints.some((endpoint) => req.url.includes(endpoint))) {
     return next(req);
   }
 
@@ -28,6 +48,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 && accessToken) {
         return handle401Error(req, next, authService, router);
       }
+      if (error.status !== 401) {
+        toastService.error(error.error?.message || error.message);
+      }
       return throwError(() => error);
     })
   );
@@ -41,7 +64,12 @@ function addTokenToRequest(request: HttpRequest<unknown>, token: string) {
   });
 }
 
-function handle401Error(request: HttpRequest<unknown>, next: HttpHandlerFn, authService: AuthService, router: Router) {
+function handle401Error(
+  request: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+  authService: AuthService,
+  router: Router
+) {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
@@ -69,7 +97,7 @@ function handle401Error(request: HttpRequest<unknown>, next: HttpHandlerFn, auth
     );
   } else {
     return refreshTokenSubject.pipe(
-      filter(token => token !== null),
+      filter((token) => token !== null),
       take(1),
       switchMap((token) => {
         if (token) {
