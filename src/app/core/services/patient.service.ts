@@ -9,6 +9,7 @@ import { ToastService } from './toast.service';
 })
 export class PatientService {
   private apiService = inject(ApiService);
+  private toastService = inject(ToastService);
   private currentPatient$$ = new BehaviorSubject<Patient | null>(null);
   public readonly currentPatient$ = this.currentPatient$$.asObservable();
   private patients$$ = new BehaviorSubject<Patient[]>([]);
@@ -17,7 +18,8 @@ export class PatientService {
   public readonly loading$ = this.loading$$.asObservable();
   private error$$ = new BehaviorSubject<string | null>(null);
   public readonly error$ = this.error$$.asObservable();
-  private toastService = inject(ToastService);
+  private patientsByMedicalHistory$$ = new BehaviorSubject<Patient[]>([]);
+  public readonly patientsByMedicalHistory$ = this.patientsByMedicalHistory$$.asObservable();
 
   onGetPatients() {
     this.loading$$.next(true);
@@ -105,13 +107,27 @@ export class PatientService {
   }
 
   numberPatientByMonth(): number[] {
-  const patients = this.patients$$.getValue();
-  const counts = Array(12).fill(0);
-  patients.forEach(patient => {
-    const month = new Date(patient.createdAt).getMonth();
-    counts[month]++;
-  });
-  return counts;
-}
+    const patients = this.patients$$.getValue();
+    const counts = Array(12).fill(0);
+    patients.forEach((patient) => {
+      const month = new Date(patient.createdAt).getMonth();
+      counts[month]++;
+    });
+    return counts;
+  }
+
+  fetchPatientsByMedicalHistoryDoctorId(doctorId: string) {
+    this.loading$$.next(true);
+    this.apiService.getPatientsByMedicalHistoryDoctorId(doctorId).subscribe({
+      next: (patients) => {
+        this.patientsByMedicalHistory$$.next(patients);
+        this.loading$$.next(false);
+      },
+      error: (error) => {
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
+  }
 
 }
