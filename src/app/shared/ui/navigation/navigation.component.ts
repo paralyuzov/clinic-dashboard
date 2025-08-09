@@ -13,6 +13,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { DoctorFormComponent } from '../../../features/doctor-form/doctor-form.component';
 import { PatientFormComponent } from '../../../features/patient-form/patient-form.component';
 import { AppointmentFormComponent } from '../../../features/appointment-form/appointment-form.component';
+import { ThemeService } from '../../../core/services/theme.service';
 @Component({
   selector: 'app-navigation',
   imports: [
@@ -30,10 +31,10 @@ import { AppointmentFormComponent } from '../../../features/appointment-form/app
   styleUrl: './navigation.component.css',
 })
 export class NavigationComponent implements OnInit {
-  items: MenuItem[] | undefined;
   options: MenuItem[] | undefined;
   userService = inject(UserService);
   user$ = this.userService.user$;
+  theme = inject(ThemeService)
 
   dialogService = inject(DialogService);
 
@@ -71,37 +72,6 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.items = [
-      {
-        label: 'Home',
-        icon: 'pi pi-home',
-      },
-      {
-        label: 'Projects',
-        icon: 'pi pi-search',
-        badge: '3',
-        items: [
-          {
-            label: 'Core',
-            icon: 'pi pi-bolt',
-            shortcut: '⌘+S',
-          },
-          {
-            label: 'Blocks',
-            icon: 'pi pi-server',
-            shortcut: '⌘+B',
-          },
-          {
-            separator: true,
-          },
-          {
-            label: 'UI Kit',
-            icon: 'pi pi-pencil',
-            shortcut: '⌘+U',
-          },
-        ],
-      },
-    ];
 
     this.options = [
       {
