@@ -24,19 +24,19 @@ import { Patient } from '../../../core/models/patient.model';
 export class PatientTableComponent {
   @ViewChild('dt') dt: Table | undefined;
   patients = input<Patient[]>([]);
-  dialogService = inject(DialogService)
+  dialogService = inject(DialogService);
   openPatientDetails(id: string) {
-     const ref = this.dialogService.open(PatientDetailsComponent, {
-            modal: true,
-            breakpoints: { '1199px': '75vw', '575px': '90vw' },
-            draggable: false,
-            resizable: false,
-            focusOnShow: false,
-            width: '30vw',
-            data:{
-              patientId: id
-            }
-          });
+    const ref = this.dialogService.open(PatientDetailsComponent, {
+      modal: true,
+      breakpoints: { '1199px': '75vw', '575px': '90vw' },
+      draggable: false,
+      resizable: false,
+      focusOnShow: false,
+      width: '50vw',
+      data: {
+        patientId: id,
+      },
+    });
   }
 
   applyFilterGlobal($event: Event, stringVal: string) {
