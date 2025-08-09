@@ -13,6 +13,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AppointmentService } from '../../core/services/appointment.service';
 import { UserService } from '../../core/services/user.service';
+import { PatientService } from '../../core/services/patient.service';
 
 @Component({
   selector: 'app-treatment-form',
@@ -34,7 +35,8 @@ export class TreatmentFormComponent {
   dialogConfig = inject(DynamicDialogConfig);
   appointmentService = inject(AppointmentService);
   userService = inject(UserService);
-  currentUserId = this.userService.currentUser?._id;
+  patientService = inject(PatientService);
+  doctorId: string | null = null;
 
   constructor(fb: FormBuilder) {
     this.treatmentForm = fb.group({
@@ -42,6 +44,9 @@ export class TreatmentFormComponent {
       diagnosis: ['', [Validators.required]],
       treatment: ['', [Validators.required]],
       notes: ['', [Validators.required]],
+    });
+    this.userService.user$.subscribe((user) => {
+     this.doctorId = user?.doctorId ?? null;
     });
   }
 
@@ -52,10 +57,10 @@ export class TreatmentFormComponent {
 
   onSubmit() {
     this.formSubmitted = true;
-    if (this.treatmentForm.valid) {
+    if (this.treatmentForm.valid && this.doctorId) {
       const treatmentData = this.treatmentForm.value;
       const { appointmentId, status } = this.dialogConfig.data;
-      this.appointmentService.onChangeAppointmentStatus(appointmentId, status,{...treatmentData, doctorId: this.currentUserId});
+      this.appointmentService.onChangeAppointmentStatus(appointmentId, status,{...treatmentData, doctorId: this.doctorId});
       this.dialogRef.close(treatmentData);
     }
   }

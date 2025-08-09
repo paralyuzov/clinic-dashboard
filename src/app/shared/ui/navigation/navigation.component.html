@@ -1,18 +1,61 @@
 <p-menubar>
   <ng-template #start>
-    <img class="w-12 h-12 saturate-200 dark:bg-gray-100/80 shadow-md dark:shadow-white rounded-full" src="clinic-logo.png" alt="">
+    <img
+      class="w-12 h-12 saturate-200 dark:bg-gray-100/80 shadow-md dark:shadow-white rounded-full"
+      src="clinic-logo.png"
+      alt=""
+    />
   </ng-template>
   <ng-template #end>
-    <div class="flex  items-center space-x-2">
-      <p-button (onClick)="openPatientForm()" label="Create Patient" size="small" outlined="true" icon="pi pi-plus"></p-button>
-      <p-button (onClick)="openDoctorForm()" label="Create Doctor" size="small" outlined="true" icon="pi pi-plus"></p-button>
-      <p-button (onClick)="openAppointmentForm()" label="Create Appointment" size="small" outlined="true" icon="pi pi-plus"></p-button>
-      <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" size="normal"/>
-      <p>{{(user$ | async)?.name}}</p>
-     <p-menu #menu [model]="options" [popup]="true" />
-      <p-button size="small" rounded="true" outlined="true" (click)="menu.toggle($event)" icon="pi pi-arrow-down"/>
+    <div class="flex items-center space-x-2">
+      @if(userService.isAdmin) {
+      <p-button
+        (onClick)="openPatientForm()"
+        label="Create Patient"
+        size="small"
+        outlined="true"
+        icon="pi pi-plus"
+      ></p-button>
+      <p-button
+        (onClick)="openDoctorForm()"
+        label="Create Doctor"
+        size="small"
+        outlined="true"
+        icon="pi pi-plus"
+      ></p-button>
+      <p-button
+        (onClick)="openAppointmentForm()"
+        label="Create Appointment"
+        size="small"
+        outlined="true"
+        icon="pi pi-plus"
+      ></p-button>
+      }
+
+      <p-avatar
+        image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+        shape="circle"
+        size="normal"
+      />
+      <p>{{ (user$ | async)?.name }}</p>
+      <p-menu #menu [model]="options" [popup]="true" />
+      <p-button
+        size="small"
+        rounded="true"
+        outlined="true"
+        (click)="menu.toggle($event)"
+        icon="pi pi-arrow-down"
+      />
+      <p-button
+        type="button"
+        size="small"
+        (click)="theme.toggle()"
+        [icon]="(theme.isDark$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
+        [rounded]="true"
+        [raised]="true"
+        variant="text"
+      >
+      </p-button>
     </div>
   </ng-template>
 </p-menubar>
-
-
