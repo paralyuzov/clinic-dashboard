@@ -6,10 +6,10 @@ export interface Address {
 
 export interface MedicalHistoryEntry {
   date: string;
-  diagnosis?: string;
-  treatment?: string;
-  notes?: string;
-  doctor?: string;
+  diagnosis: string;
+  treatment: string;
+  notes: string;
+  doctorId: string;
 }
 
 export type PatientStatus = 'Active' | 'Inactive' | 'New';
