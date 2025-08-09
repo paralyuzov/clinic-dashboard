@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { DoctorService } from '../../core/services/doctor.service';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AsyncPipe } from '@angular/common';
@@ -17,6 +17,7 @@ import { ConfirmationService,MessageService } from 'primeng/api';
   templateUrl: './doctor-details.component.html',
   styleUrl: './doctor-details.component.css',
   providers: [DialogService, ConfirmationService, MessageService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DoctorDetailsComponent implements OnInit {
   doctorService = inject(DoctorService);
@@ -28,13 +29,15 @@ export class DoctorDetailsComponent implements OnInit {
   dialogService = inject(DialogService);
   confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
+  private cdr = inject(ChangeDetectorRef);
   doctordId: string | null = null;
 
-  ngOnInit() {
+  ngOnInit(): void {
     const doctorId = this.dialogConfig.data.doctorId;
     if (doctorId) {
       this.doctordId = doctorId;
       this.doctorService.onGetDoctorById(doctorId);
+      this.cdr.markForCheck();
     }
   }
 
