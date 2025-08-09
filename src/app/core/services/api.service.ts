@@ -116,4 +116,10 @@ export class ApiService {
       `${this.baseUrl}/appointments/appointments-by-doctor/${doctorId}`
     );
   }
+
+  getPatientsByMedicalHistoryDoctorId(doctorId: string) {
+    return this.http.get<Patient[]>(
+      `${this.baseUrl}/patients/doctor/${doctorId}`
+    );
+  }
 }
