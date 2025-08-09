@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: 'admin' | 'employee';
-  doctorId?: string;
+  doctorId: string;
 }
 
 export interface RegisterDto {
