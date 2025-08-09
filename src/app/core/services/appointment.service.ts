@@ -5,9 +5,10 @@ import {
   AppointmentDto,
   AppointmentFull,
 } from '../models/appointment.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ToastService } from './toast.service';
 import { MedicalHistoryEntry } from '../models/patient.model';
+import { PatientService } from './patient.service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,9 @@ export class AppointmentService {
   public readonly fullDays$ = this.fullDays$$.asObservable();
   private toastService = inject(ToastService);
   private appointmentsByDoctor$$ = new BehaviorSubject<AppointmentFull[]>([]);
-  public readonly appointmentsByDoctor$ = this.appointmentsByDoctor$$.asObservable();
+  public readonly appointmentsByDoctor$ =
+    this.appointmentsByDoctor$$.asObservable();
+    private patientService = inject(PatientService);
 
   onCreateAppointment(appointmentData: AppointmentDto) {
     this.loading$$.next(true);
@@ -125,21 +128,26 @@ export class AppointmentService {
     medicalHistory?: MedicalHistoryEntry
   ) {
     this.loading$$.next(true);
-    this.apiService.changeAppointmentStatus(appointmentId, status, medicalHistory).subscribe({
-      next: (response) => {
-        this.fetchAppointments();
-        this.loading$$.next(false);
-        this.toastService.success('Appointment status updated successfully.');
-      },
-      error: (error) => {
-        this.error$$.next(error.message);
-        this.loading$$.next(false);
-        this.toastService.error(
-          'Failed to update appointment status',
-          error.message
-        );
-      },
-    });
+    this.apiService
+      .changeAppointmentStatus(appointmentId, status, medicalHistory)
+      .subscribe({
+        next: (response) => {
+          this.fetchAppointments();
+          if(status === 'Completed') {
+            this.patientService.fetchPatientsByMedicalHistoryDoctorId(medicalHistory?.doctorId!);
+          }
+          this.loading$$.next(false);
+          this.toastService.success('Appointment status updated successfully.');
+        },
+        error: (error) => {
+          this.error$$.next(error.message);
+          this.loading$$.next(false);
+          this.toastService.error(
+            'Failed to update appointment status',
+            error.message
+          );
+        },
+      });
   }
 
   onGetAppointmentsByDoctorId(doctorId: string) {
@@ -154,5 +162,22 @@ export class AppointmentService {
         this.loading$$.next(false);
       },
     });
+  }
+
+  getAppointmentsTodayByDoctor$(doctorId: string) {
+    return this.appointmentsByDoctor$.pipe(
+      map((appointments) =>
+        appointments.filter((appointment) => {
+          const appointmentDate = new Date(appointment.date);
+          const today = new Date();
+          return (
+            appointment.doctor?._id === doctorId &&
+            appointmentDate.getFullYear() === today.getFullYear() &&
+            appointmentDate.getMonth() === today.getMonth() &&
+            appointmentDate.getDate() === today.getDate()
+          );
+        })
+      )
+    );
   }
 }
