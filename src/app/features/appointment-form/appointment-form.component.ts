@@ -1,4 +1,12 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { DatePicker } from 'primeng/datepicker';
 import {
   FormBuilder,
@@ -34,6 +42,7 @@ import { AVAILABLE_HOURS } from '../../constants/slots';
   ],
   templateUrl: './appointment-form.component.html',
   styleUrl: './appointment-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppointmentFormComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
@@ -50,6 +59,7 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
   doctors$ = this.doctorService.doctors$;
   fullDays$ = this.appointmentService.fullDays$;
   allSlots: string[] = AVAILABLE_HOURS;
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(fb: FormBuilder) {
     const today = new Date();
@@ -67,23 +77,24 @@ export class AppointmentFormComponent implements OnInit, OnDestroy {
     this.doctorService.onGetDoctors();
     this.patientService.onGetPatients();
     this.subs.add(
-      this.appoitmentForm
-        .get('doctor')!
-        .valueChanges.subscribe((doctorId) => {
-          this.fetchSlots();
-          if (doctorId) {
-            this.appointmentService.fetchFullDaysByDoctor(doctorId);
-          }
-        })
+      this.appoitmentForm.get('doctor')!.valueChanges.subscribe((doctorId) => {
+        this.fetchSlots();
+        if (doctorId) {
+          this.appointmentService.fetchFullDaysByDoctor(doctorId);
+          this.cdr.markForCheck();
+        }
+      })
     );
     this.subs.add(
       this.appoitmentForm
         .get('date')!
         .valueChanges.subscribe(() => this.fetchSlots())
     );
+    this.cdr.markForCheck();
     this.subs.add(
       this.appointmentService.appointmentsByDate$.subscribe((appointments) => {
         this.unavailableSlots = appointments.map((a) => a.hours);
+        this.cdr.markForCheck();
       })
     );
   }
