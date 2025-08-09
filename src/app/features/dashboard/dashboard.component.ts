@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AppointmentTableComponent } from '../../shared/ui/appointment-table/appointment-table.component';
 import { PatientChartComponent } from '../../shared/ui/patient-chart/patient-chart.component';
 import { PatientTableComponent } from '../../shared/ui/patient-table/patient-table.component';
@@ -24,11 +24,13 @@ import { SpinnerComponent } from '../../shared/ui/spinner/spinner.component';
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   appointmentService = inject(AppointmentService);
   doctorService = inject(DoctorService);
   patientService = inject(PatientService);
+  private cdr = inject(ChangeDetectorRef);
   appointmentsToday: number = 0;
   numberOfPatients: number = 0;
   numberOfDoctors: number = 0;
@@ -43,16 +45,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.appointmentService.appointments$.subscribe(() => {
         this.appointmentsToday =
           this.appointmentService.numberOfAppointmentsToday();
+        this.cdr.markForCheck();
       })
     );
     this.subscriptions.add(
       this.doctorService.doctors$.subscribe(() => {
         this.numberOfDoctors = this.doctorService.numberOfDoctors();
+        this.cdr.markForCheck();
       })
     );
     this.subscriptions.add(
       this.patientService.patients$.subscribe(() => {
         this.numberOfPatients = this.patientService.numberOfPatients();
+        this.cdr.markForCheck();
       })
     );
   }
