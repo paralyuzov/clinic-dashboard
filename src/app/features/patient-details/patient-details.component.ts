@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PatientService } from '../../core/services/patient.service';
 import { AsyncPipe } from '@angular/common';
@@ -24,6 +24,7 @@ import { PatientEditComponent } from '../patient-edit/patient-edit.component';
   templateUrl: './patient-details.component.html',
   styleUrl: './patient-details.component.css',
   providers: [DialogService, ConfirmationService, MessageService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PatientDetailsComponent implements OnInit {
   patientService = inject(PatientService);
@@ -36,12 +37,14 @@ export class PatientDetailsComponent implements OnInit {
   confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
   patientId: string | null = null;
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     const patientId = this.dialogConfig.data.patientId;
     if (patientId) {
       this.patientId = patientId;
       this.patientService.onGetPatientById(patientId);
+      this.cdr.detectChanges();
     }
   }
 
@@ -64,38 +67,44 @@ export class PatientDetailsComponent implements OnInit {
   }
 
   onDelete(event: Event) {
-        this.confirmationService.confirm({
-            target: event.target as EventTarget,
-            message: 'Do you want to delete this patient?',
-            header: 'Danger Zone',
-            icon: 'pi pi-info-circle',
-            rejectLabel: 'Cancel',
-            rejectButtonProps: {
-                label: 'Cancel',
-                severity: 'secondary',
-                outlined: true,
-            },
-            acceptButtonProps: {
-                label: 'Delete',
-                severity: 'danger',
-            },
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Do you want to delete this patient?',
+      header: 'Danger Zone',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancel',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: 'Delete',
+        severity: 'danger',
+      },
 
-            accept: () => {
-                if (this.patientId) {
-                    this.patientService.onDeletePatientById(this.patientId);
-                    this.patientService.loading$.subscribe(loading => {
-                        if (!loading) {
-                            this.dialogRef.close();
-                        }
-                    });
-                }
-                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
-            },
-            reject: () => {
-                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
-            },
+      accept: () => {
+        if (this.patientId) {
+          this.patientService.onDeletePatientById(this.patientId);
+          this.patientService.loading$.subscribe((loading) => {
+            if (!loading) {
+              this.dialogRef.close();
+            }
+          });
+        }
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Confirmed',
+          detail: 'Record deleted',
         });
-    }
-
-
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Rejected',
+          detail: 'You have rejected',
+        });
+      },
+    });
+  }
 }

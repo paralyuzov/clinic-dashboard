@@ -11,7 +11,7 @@
       <p-button (onClick)="openEditPatient()" icon="pi pi-user-edit" pTooltip="Edit Patient" tooltipPosition="top"
         placeholder="autoHide: true" [rounded]="true" [text]="true" [raised]="true" severity="warn" />
       <p-confirmdialog />
-      <p-button (onClick)="onDelete($event)" icon="pi pi-trash" pTooltip="Delete Doctor" tooltipPosition="top"
+      <p-button (onClick)="onDelete($event)" icon="pi pi-trash" pTooltip="Delete Patient" tooltipPosition="top"
         placeholder="autoHide: true" [rounded]="true" [text]="true" [raised]="true" severity="danger" />
     </div>
     <img src="doctor_details.webp" alt="Doctor Avatar" class="w-32 h-32 rounded-full shadow-md object-cover mb-4" />
@@ -36,19 +36,42 @@
         <span>Phone:</span>
         <span>{{ patient.phone }}</span>
       </div>
-       <div class="flex justify-between">
+      <div class="flex justify-between">
         <span>Address:</span>
-        <span>{{ patient.address.country }}, {{ patient.address.city }}, {{ patient.address.street }}</span>
+        <span>{{ patient.address.country }}, {{ patient.address.city }},
+          {{ patient.address.street }}</span>
       </div>
-       <div class="flex justify-between">
+      <div class="flex justify-between">
         <span>Registered:</span>
-        <span>{{ patient.createdAt | date: 'mediumDate' }}</span>
+        <span>{{ patient.createdAt | date : "mediumDate" }}</span>
       </div>
-         <div class="flex justify-between">
+      <div class="flex justify-between">
         <span>Status:</span>
         <span>{{ patient.status }}</span>
       </div>
-
+      <div class="flex flex-col justify-between">
+        <span>Medical History:</span>
+        @for(history of patient.medicalHistory; track history.date + history.diagnosis + history.treatment) {
+          <div class="rounded-md p-3 shadow-inner shadow-slate-300 flex flex-col gap-1 my-1">
+            <div class="flex justify-between text-sm ">
+              <span class="font-semibold">Date:</span>
+              <span>{{ history.date }}</span>
+            </div>
+            <div class="flex justify-between text-sm ">
+              <span class="font-semibold">Diagnosis:</span>
+              <span>{{ history.diagnosis }}</span>
+            </div>
+            <div class="flex justify-between text-sm ">
+              <span class="font-semibold">Treatment:</span>
+              <span>{{ history.treatment }}</span>
+            </div>
+            <div class="flex justify-between text-sm ">
+              <span class="font-semibold">Notes:</span>
+              <span>{{ history.notes }}</span>
+            </div>
+          </div>
+        }
+      </div>
     </div>
   </div>
 </div>
