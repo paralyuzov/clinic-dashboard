@@ -1,7 +1,7 @@
-<p-menubar>
+<p-menubar styleClass="rounded-b-xl! shadow-sm shadow-slate-500 mb-2">
   <ng-template #start>
     <img
-      class="w-12 h-12 saturate-200 dark:bg-gray-100/80 shadow-md dark:shadow-white rounded-full"
+      class="w-14 h-14 saturate-200 dark:bg-gray-100/80 shadow-md dark:shadow-white rounded-full"
       src="clinic-logo.png"
       alt=""
     />
@@ -15,6 +15,7 @@
         size="small"
         outlined="true"
         icon="pi pi-plus"
+        raised="true"
       ></p-button>
       <p-button
         (onClick)="openDoctorForm()"
@@ -22,6 +23,7 @@
         size="small"
         outlined="true"
         icon="pi pi-plus"
+        raised="true"
       ></p-button>
       <p-button
         (onClick)="openAppointmentForm()"
@@ -29,6 +31,7 @@
         size="small"
         outlined="true"
         icon="pi pi-plus"
+        raised="true"
       ></p-button>
       }
 
@@ -45,6 +48,7 @@
         outlined="true"
         (click)="menu.toggle($event)"
         icon="pi pi-arrow-down"
+        raised="true"
       />
       <p-button
         type="button"
@@ -53,7 +57,7 @@
         [icon]="(theme.isDark$ | async) ? 'pi pi-sun' : 'pi pi-moon'"
         [rounded]="true"
         [raised]="true"
-        variant="text"
+        outlined="true"
       >
       </p-button>
     </div>

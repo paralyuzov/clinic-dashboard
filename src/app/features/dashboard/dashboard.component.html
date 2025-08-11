@@ -30,7 +30,7 @@
       </p>
     </div>
     <div class="col-span-2 shadow-inner dark:shadow-inner shadow-slate-400 p-1">
-      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac] p-1">
         Appointments Overview
       </p>
       @if (appointmentService.loading$ | async) {
@@ -49,7 +49,7 @@
       <app-patient-chart />
     </div>
     <div class="col-span-2 shadow-inner dark:shadow-inner shadow-slate-400 p-1">
-      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac] p-1">
         Patients Overview
       </p>
       @if (patientService.loading$ | async) {
@@ -63,7 +63,7 @@
       }
     </div>
     <div class="shadow-inner dark:shadow-inner shadow-slate-400 p-1">
-      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac]">
+      <p class="text-[#1F2937] font-mono font-bold dark:text-[#5effac] p-1">
         Doctors Overview
       </p>
       @if (doctorService.loading$ | async) {
