@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { LoginDto, RegisterDto, User } from '../models/user.model';
+import { ChangePasswordDto, LoginDto, RegisterDto, User } from '../models/user.model';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { ToastService } from './toast.service';
@@ -100,6 +100,37 @@ export class UserService {
       },
       error: (error) => {
         console.error('User verification failed:', error);
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
+  }
+
+  onResetPassword(email:string) {
+    this.loading$$.next(true);
+    this.authService.resetPassword(email).subscribe({
+      next: () => {
+        this.toastService.info(`Check your email for password reset instructions.`);
+        this.loading$$.next(false);
+      },
+      error: (error) => {
+        console.error('Password reset failed:', error);
+        this.error$$.next(error.message);
+        this.loading$$.next(false);
+      },
+    });
+  }
+
+  onChangePassword(changePassword:ChangePasswordDto) {
+    this.loading$$.next(true);
+    this.authService.changePassword(changePassword).subscribe({
+      next: () => {
+        this.toastService.info(`Password changed successfully.`);
+        this.loading$$.next(false);
+        this.router.navigate(['login']);
+      },
+      error: (error) => {
+        console.error('Password change failed:', error);
         this.error$$.next(error.message);
         this.loading$$.next(false);
       },
