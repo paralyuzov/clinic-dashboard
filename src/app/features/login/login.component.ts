@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
-import { Router } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
     ButtonModule,
     MessageModule,
     ReactiveFormsModule,
+    RouterModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
