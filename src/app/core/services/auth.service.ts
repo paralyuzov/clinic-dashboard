@@ -5,6 +5,7 @@ import {
   UserResponse,
   User,
   LoginDto,
+  ChangePasswordDto,
 } from '../models/user.model';
 
 @Injectable({
@@ -54,4 +55,13 @@ export class AuthService {
       withCredentials: true,
     });
   }
+
+  resetPassword(email:string) {
+    return this.http.post(`${this.baseUrl}/reset-password`, { email });
+  }
+
+  changePassword(changePassword:ChangePasswordDto) {
+    return this.http.post(`${this.baseUrl}/change-password`, changePassword);
+  }
+
 }
