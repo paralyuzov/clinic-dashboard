@@ -24,3 +24,9 @@ export interface UserResponse {
   user: User;
   accessToken: string;
 }
+
+export interface ChangePasswordDto {
+  token:string;
+  newPassword:string;
+  confirmPassword:string;
+}
