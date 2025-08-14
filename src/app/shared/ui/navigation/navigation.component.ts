@@ -43,7 +43,7 @@ export class NavigationComponent implements OnInit {
       header: 'Create Doctor',
       modal: true,
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
-      style: { width: '50vw' },
+      style: { width: '20vw' },
       draggable: false,
       resizable: false,
     });
@@ -54,7 +54,7 @@ export class NavigationComponent implements OnInit {
       header: 'Create Patient',
       modal: true,
       breakpoints: { '1199px': '75vw', '575px': '90vw' },
-      style: { width: '50vw' },
+      style: { width: '20vw' },
       draggable: false,
       resizable: false,
     });

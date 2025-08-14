@@ -32,7 +32,7 @@ export class PatientTableComponent {
       draggable: false,
       resizable: false,
       focusOnShow: false,
-      width: '50vw',
+      width: '30vw',
       data: {
         patientId: id,
       },
